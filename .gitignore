@@ -1,0 +1,19 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore XAMPP/IDE stuff
+/vendor/
+node_modules/
+*.log
+
+# Ignore sensitive files (database credentials etc.)
+includes/db.php
+
+#Ignore configuration files
+config.php
+
+# ignore client secrets
+google_callback.php
+
+google_login.php
