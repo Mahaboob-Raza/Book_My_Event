@@ -1,10 +1,20 @@
 <?php
 include("includes/db.php");
 
-// Fetch only approved events
-$sql = "SELECT * FROM events WHERE status = 'approved' ORDER BY date ASC";
+// Step 1: Mark past events as expired
+$conn->query("UPDATE events 
+              SET status = 'expired' 
+              WHERE date < CURDATE() 
+              AND status = 'approved'");
+
+// Step 2: Fetch only approved + upcoming events
+$sql = "SELECT * FROM events 
+        WHERE status = 'approved' 
+        AND date >= CURDATE() 
+        ORDER BY date ASC";
 $result = $conn->query($sql);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

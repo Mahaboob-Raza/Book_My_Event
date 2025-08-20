@@ -8,7 +8,13 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     $event_id = intval($_GET['id']);
     $_SESSION['event_id'] = $event_id; // Store for redirect after Google login
 
-    // Fetch event details only if approved
+    // Step 1: Expire event if past its date
+    $sql_expire = "UPDATE events SET status = 'expired' WHERE event_id = ? AND date < CURDATE() AND status = 'approved'";
+    $stmt_expire = $conn->prepare($sql_expire);
+    $stmt_expire->bind_param("i", $event_id);
+    $stmt_expire->execute();
+
+    // Step 2: Fetch event details (only approved & not expired)
     $sql = "SELECT * FROM events WHERE event_id = ? AND status = 'approved'";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $event_id);
@@ -16,7 +22,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
     $result = $stmt->get_result();
 
     if ($result->num_rows === 0) {
-        $event = null; // Event not found or not approved
+        $event = null; // Event not found or not available
     } else {
         $event = $result->fetch_assoc();
     }
@@ -25,7 +31,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $success = "";
 $error = "";
 
-// Handle registration only if event is valid
+// Handle registration only if event is valid & not expired
 if ($event && $_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
     $email = trim($_POST['email']);
@@ -47,6 +53,7 @@ if ($event && $_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
