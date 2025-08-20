@@ -7,49 +7,78 @@ if (!isset($_SESSION['admin_logged_in'])) {
     header("Location: admin_login.php");
     exit;
 }
+require 'vendor/autoload.php'; // Composer autoload
 
-// 🔹 Auto-expire events (approved but past date)
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// 🔹 Auto-expire events
 $conn->query("UPDATE events SET status = 'expired' WHERE status = 'approved' AND date < CURDATE()");
 
-// 🔹 Handle Approve / Reject / Delete actions
-if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
-    $event_id = intval($_REQUEST['id']);
-    $action = $_REQUEST['action'];
+// Handle Approve / Reject / Delete actions
+if (isset($_GET['action']) && isset($_GET['id'])) {
+    $event_id = intval($_GET['id']);
+    $action = $_GET['action'];
 
     if ($action === "delete") {
-        // Delete event permanently
-        $sql = "DELETE FROM events WHERE event_id=?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $event_id);
-        $stmt->execute();
+        $conn->query("DELETE FROM events WHERE event_id=$event_id");
     } else {
-        // Approve / Reject / Expire
-        $sql = "UPDATE events SET status=? WHERE event_id=?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("si", $action, $event_id);
-        $stmt->execute();
-
-        // Fetch organizer email
+        // Fetch event details BEFORE update
         $result = $conn->query("SELECT organizer_email, title FROM events WHERE event_id=$event_id");
-        if ($result && $row = $result->fetch_assoc()) {
+        if ($result && $result->num_rows > 0) {
+            $row = $result->fetch_assoc();
             $to = $row['organizer_email'];
-            $subject = "Event Status Update: " . $row['title'];
+            $eventTitle = $row['title'];
 
-            if ($action == "approved") {
-                $message = "✅ Your event '" . $row['title'] . "' has been approved!";
-            } elseif ($action == "rejected") {
-                $message = "❌ Your event '" . $row['title'] . "' has been rejected.";
-            } elseif ($action == "expired") {
-                $message = "⚠️ Your event '" . $row['title'] . "' has expired.";
+            // Update status
+            $sql = "UPDATE events SET status=? WHERE event_id=?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("si", $action, $event_id);
+
+            if ($stmt->execute()) {
+                // Prepare mail content
+                $subject = "Event Status Update: " . $eventTitle;
+
+                if ($action == "approved") {
+                    $message = "
+                        <h2 style='color:green;'>Event Approved ✅</h2>
+                        <p>Your event '<b>{$eventTitle}</b>' has been approved and is now live on our platform.</p>
+                        <p>Thank you for choosing <b>Book My Event</b>!</p>
+                    ";
+                } elseif ($action == "rejected") {
+                    $message = "
+                        <h2 style='color:red;'>Event Rejected ❌</h2>
+                        <p>We’re sorry to inform you that your event '<b>{$eventTitle}</b>' has been rejected.</p>
+                        <p>You may contact support for more details.</p>
+                    ";
+                }
+
+                // Send mail with PHPMailer
+                $mail = new PHPMailer(true);
+                try {
+                    $mail->isSMTP();
+                    $mail->Host = "smtp.gmail.com";
+                    $mail->SMTPAuth = true;
+                    $mail->Username = "chinday101@gmail.com"; // ✅ replace
+                    $mail->Password = "ndxs efsy gzvk wood";   // ✅ use App Password
+                    $mail->SMTPSecure = "tls";
+                    $mail->Port = 587;
+
+                    $mail->setFrom("chinday101@gmail.com", "Book My Event");
+                    $mail->addAddress($to);
+
+                    $mail->isHTML(true);
+                    $mail->Subject = $subject;
+                    $mail->Body = $message;
+
+                    $mail->send();
+                } catch (Exception $e) {
+                    error_log("Mailer Error: " . $mail->ErrorInfo);
+                }
             }
-
-            // Send email
-            $headers = "From: no-reply@bookmyevent.page.gd";
-            @mail($to, $subject, $message, $headers);
         }
     }
 
-    // Refresh after action
     header("Location: dashboard.php");
     exit;
 }
@@ -77,6 +106,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
         <th>Title</th>
         <th>Date</th>
         <th>Location</th>
+        <th>Description</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -89,6 +119,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
                       <td>".htmlspecialchars($row['title'])."</td>
                       <td>".htmlspecialchars($row['date'])."</td>
                       <td>".htmlspecialchars($row['location'])."</td>
+                      <td>".htmlspecialchars($row['description'])."</td>
                       <td>
                         <a href='dashboard.php?action=approved&id={$row['event_id']}' class='btn btn-sm btn-success'>Approve</a>
                         <a href='dashboard.php?action=rejected&id={$row['event_id']}' class='btn btn-sm btn-warning'>Reject</a>
@@ -97,7 +128,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
                     </tr>";
           }
       } else {
-          echo "<tr><td colspan='4'>No pending events</td></tr>";
+          echo "<tr><td colspan='5'>No pending events</td></tr>";
       }
       ?>
     </tbody>
@@ -111,6 +142,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
         <th>Title</th>
         <th>Date</th>
         <th>Location</th>
+        <th>Description</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -123,6 +155,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
                       <td>".htmlspecialchars($row['title'])."</td>
                       <td>".htmlspecialchars($row['date'])."</td>
                       <td>".htmlspecialchars($row['location'])."</td>
+                      <td>".htmlspecialchars($row['description'])."</td>
                       <td>
                         <a href='dashboard.php?action=rejected&id={$row['event_id']}' class='btn btn-sm btn-warning'>Reject</a>
                         <a href='dashboard.php?action=delete&id={$row['event_id']}' class='btn btn-sm btn-danger' onclick=\"return confirm('Are you sure?');\">Delete</a>
@@ -130,7 +163,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
                     </tr>";
           }
       } else {
-          echo "<tr><td colspan='4'>No approved events</td></tr>";
+          echo "<tr><td colspan='5'>No approved events</td></tr>";
       }
       ?>
     </tbody>
@@ -144,6 +177,7 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
         <th>Title</th>
         <th>Date</th>
         <th>Location</th>
+        <th>Description</th>
         <th>Status</th>
       </tr>
     </thead>
@@ -156,11 +190,12 @@ if (isset($_REQUEST['action']) && isset($_REQUEST['id'])) {
                       <td>".htmlspecialchars($row['title'])."</td>
                       <td>".htmlspecialchars($row['date'])."</td>
                       <td>".htmlspecialchars($row['location'])."</td>
+                      <td>".htmlspecialchars($row['description'])."</td>
                       <td><span class='badge bg-secondary'>Expired</span></td>
                     </tr>";
           }
       } else {
-          echo "<tr><td colspan='4'>No expired events</td></tr>";
+          echo "<tr><td colspan='5'>No expired events</td></tr>";
       }
       ?>
     </tbody>
