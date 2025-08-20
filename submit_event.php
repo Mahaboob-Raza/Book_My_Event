@@ -4,32 +4,31 @@ include("includes/db.php");
 $success = "";
 $error = "";
 
-// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $title = trim($_POST['title']);
     $date = $_POST['date'];
     $location = trim($_POST['location']);
     $description = trim($_POST['description']);
+    $organizer_email = trim($_POST['organizer_email']);  // new field
 
-    // File upload handling
+    // File upload
     $imageName = "";
     if (!empty($_FILES['image']['name'])) {
         $targetDir = "uploads/";
+        $imageName = time() . "_" .
         $imageName = time() . "_" . basename($_FILES["image"]["name"]);
         $targetFile = $targetDir . $imageName;
 
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
-            // image uploaded successfully
-        } else {
+        if (!move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
             $error = "Image upload failed.";
         }
     }
 
-    if (!empty($title) && !empty($date) && !empty($location) && !empty($description)) {
-        $sql = "INSERT INTO events (title, date, location, description, image, status) 
-                VALUES (?, ?, ?, ?, ?, 'pending')";
+    if (!empty($title) && !empty($date) && !empty($location) && !empty($description) && !empty($organizer_email)) {
+        $sql = "INSERT INTO events (title, date, location, description, organizer_email, image, status) 
+                VALUES (?, ?, ?, ?, ?, ?, 'pending')";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssss", $title, $date, $location, $description, $imageName);
+        $stmt->bind_param("ssssss", $title, $date, $location, $description, $organizer_email, $imageName);
 
         if ($stmt->execute()) {
             $success = "✅ Your event has been submitted for approval!";
@@ -37,10 +36,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error = "❌ Error: " . $conn->error;
         }
     } else {
-        $error = "All fields except image are required.";
+        $error = "All fields including organizer email are required.";
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -64,6 +64,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php endif; ?>
 
     <form method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label class="form-label">Organizer Email*</label>
+            <input type="email" name="organizer_email" class="form-control" required>
+        </div>
+
         <div class="mb-3">
             <label class="form-label">Event Title*</label>
             <input type="text" name="title" class="form-control" required>
