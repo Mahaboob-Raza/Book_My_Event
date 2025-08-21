@@ -35,46 +35,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("si", $action, $event_id);
 
-            if ($stmt->execute()) {
-                // Prepare mail content
-                $subject = "Event Status Update: " . $eventTitle;
-
-                if ($action == "approved") {
-                    $message = "
-                        <h2 style='color:green;'>Event Approved ✅</h2>
-                        <p>Your event '<b>{$eventTitle}</b>' has been approved and is now live on our platform.</p>
-                        <p>Thank you for choosing <b>Book My Event</b>!</p>
-                    ";
-                } elseif ($action == "rejected") {
-                    $message = "
-                        <h2 style='color:red;'>Event Rejected ❌</h2>
-                        <p>We’re sorry to inform you that your event '<b>{$eventTitle}</b>' has been rejected.</p>
-                        <p>You may contact support for more details.</p>
-                    ";
-                }
-
-                // Send mail with PHPMailer
-                $mail = new PHPMailer(true);
-                try {
-                    $mail->isSMTP();
-                    $mail->Host = "smtp.gmail.com";
-                    $mail->SMTPAuth = true;
-                    $mail->Username = "chinday101@gmail.com"; // ✅ replace
-                    $mail->Password = "ndxs efsy gzvk wood";   // ✅ use App Password
-                    $mail->SMTPSecure = "tls";
-                    $mail->Port = 587;
-
-                    $mail->setFrom("chinday101@gmail.com", "Book My Event");
-                    $mail->addAddress($to);
-
-                    $mail->isHTML(true);
-                    $mail->Subject = $subject;
-                    $mail->Body = $message;
-
-                    $mail->send();
-                } catch (Exception $e) {
-                    error_log("Mailer Error: " . $mail->ErrorInfo);
-                }
+            
             }
         }
     }
@@ -90,7 +51,7 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
   <title>Admin Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="assests/css/style.css">
-  
+
 </head>
 <body class="bg-light">
 
