@@ -17,3 +17,6 @@ config.php
 google_callback.php
 
 google_login.php
+
+# ignore db files
+upload/

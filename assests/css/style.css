@@ -1,0 +1,271 @@
+/* ==================================================
+   BOOK MY EVENT - GLOBAL PURPLE & PINK THEME
+   Optimized & Cleaned
+================================================== */
+
+/* ---------------------------
+   GLOBAL STYLES
+---------------------------- */
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #f8e6ff, #ffe6f7);
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+/* ---------------------------
+   NAVBAR
+---------------------------- */
+.navbar,
+.bme-navbar {
+  background: linear-gradient(90deg, #6a0dad, #ff69b4);
+}
+.navbar-brand, 
+.bme-navbar-brand,
+.nav-link, 
+.bme-navbar .nav-link {
+  color: #fff !important;
+  font-weight: 500;
+}
+.navbar-brand:hover, 
+.bme-navbar-brand:hover,
+.nav-link:hover, 
+.nav-link.active,
+.bme-navbar .nav-link:hover, 
+.bme-navbar .nav-link.active {
+  color: #ffd6f5 !important; /* soft pink highlight */
+}
+
+/* ---------------------------
+   HERO SECTION
+---------------------------- */
+.bme-hero {
+  background: linear-gradient(rgba(106,13,173,0.7), rgba(255,105,180,0.7)),
+              url("../images/hero-bg.jpg") center/cover no-repeat;
+  color: #fff;
+  padding: 120px 0;
+  text-align: center;
+}
+.bme-hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+}
+.bme-hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+/* ---------------------------
+   BUTTONS
+---------------------------- */
+.bme-btn-primary {
+  background: linear-gradient(90deg, #6a0dad, #ff69b4);
+  border: none;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+.bme-btn-primary:hover {
+  background: linear-gradient(90deg, #5c0b9a, #ff4fa8);
+  transform: scale(1.05);
+}
+
+/* ---------------------------
+   CARDS
+---------------------------- */
+.card, 
+.bme-card {
+  background: #fff;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.card:hover, 
+.bme-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(106,13,173,0.2);
+}
+.card-img-top {
+  height: 200px;
+  object-fit: cover;
+}
+.card-title {
+  color: #6a0dad;
+  font-weight: 600;
+}
+.card-text {
+  font-size: 0.95rem;
+  color: #555;
+}
+
+/* ---------------------------
+   SECTION TITLES
+---------------------------- */
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  color: #6a0dad;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+}
+.section-title::after {
+  content: "";
+  display: block;
+  width: 50%;
+  height: 3px;
+  background: linear-gradient(90deg, #6a0dad, #ff69b4);
+  margin: 8px auto 0;
+}
+
+/* ---------------------------
+   ALERTS
+---------------------------- */
+.alert-success {
+  background: #e6f7f2;
+  border: 1px solid #b3f0e0;
+  color: #28a745;
+}
+.alert-danger {
+  background: #ffe6eb;
+  border: 1px solid #ffccd5;
+  color: #d63384;
+}
+
+/* ---------------------------
+   FOOTER
+---------------------------- */
+footer {
+  background: linear-gradient(90deg, #6a0dad, #ff69b4);
+  color: #fff;
+  padding: 20px 0;
+  text-align: center;
+  margin-top: 40px;
+  border-radius: 12px 12px 0 0;
+}
+footer a {
+  color: #fff;
+  text-decoration: none;
+}
+footer a:hover {
+  color: #ffd6f5;
+}
+
+/* ---------------------------
+   SUBMIT EVENT FORM
+---------------------------- */
+/* ---------------------------
+   FORM CONTAINERS (Submit Event etc.)
+---------------------------- */
+.bme-form-container {
+  background: linear-gradient(135deg, #fff, #f8e6ff); /* soft white → purple gradient */
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 20px rgba(106,13,173,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.bme-form-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(106,13,173,0.25);
+}
+
+/* ---------------------------
+   EVENT DETAIL PAGE
+---------------------------- */
+.bme-event-details {
+  background: #fff;
+  border-left: 6px solid #6a0dad; /* purple accent */
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+.bme-event-details:hover {
+  box-shadow: 0 6px 20px rgba(106,13,173,0.2);
+}
+
+.bme-event-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #6a0dad; /* purple title */
+}
+
+.bme-event-image {
+  border-radius: 16px;
+  border: 2px solid #f3c4f6; /* soft pink border */
+}
+
+/* ---------------------------
+   REGISTRATION FORM
+---------------------------- */
+.bme-form-container {
+  background: linear-gradient(135deg, #fff, #fbe9ff); 
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 20px rgba(106,13,173,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.bme-form-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(106,13,173,0.2);
+}
+
+.bme-form-container .form-control {
+  border-radius: 10px;
+  border: 1px solid #e2c6f3;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+.bme-form-container .form-control:focus {
+  border-color: #6a0dad;
+  box-shadow: 0 0 8px rgba(106,13,173,0.3);
+}
+
+.bme-form-container h4 {
+  font-weight: 600;
+  color: #6a0dad;
+}
+
+/* ---------------------------
+   Contact Page
+---------------------------- */
+/* Developer Contact Page */
+.developer-pic {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #ba68c8;
+  box-shadow: 0 4px 10px rgba(106, 13, 173, 0.3);
+}
+
+.contact-card {
+  background: linear-gradient(135deg, #f8e1ff, #ffe0f7);
+  border-radius: 15px;
+  border: 1px solid #e1bee7;
+}
+
+.contact-card h2 {
+  color: #6a0dad;
+  font-weight: 700;
+}
+
+.contact-info p {
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.contact-info a {
+  color: #6a0dad;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}

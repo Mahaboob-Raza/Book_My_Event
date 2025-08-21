@@ -9,13 +9,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $date = $_POST['date'];
     $location = trim($_POST['location']);
     $description = trim($_POST['description']);
-    $organizer_email = trim($_POST['organizer_email']);  // new field
+    $organizer_email = trim($_POST['organizer_email']);  
 
     // File upload
     $imageName = "";
     if (!empty($_FILES['image']['name'])) {
         $targetDir = "uploads/";
-        $imageName = time() . "_" .
         $imageName = time() . "_" . basename($_FILES["image"]["name"]);
         $targetFile = $targetDir . $imageName;
 
@@ -47,58 +46,70 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
 <meta charset="UTF-8">
 <title>Submit Event - Book My Event</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Bootstrap -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="assets/css/style.css" rel="stylesheet">
+
 </head>
 <body>
 
 <?php include("includes/navbar.php"); ?>
 
 <div class="container my-5">
-    <h2 class="mb-4 text-center">Submit Your Event</h2>
+    <div class="bme-form-container">
+        <h2>Submit Your Event</h2>
 
-    <?php if ($success): ?>
-        <div class="alert alert-success"><?php echo $success; ?></div>
-    <?php elseif ($error): ?>
-        <div class="alert alert-danger"><?php echo $error; ?></div>
-    <?php endif; ?>
+        <?php if ($success): ?>
+            <div class="alert alert-success text-center"><?php echo $success; ?></div>
+        <?php elseif ($error): ?>
+            <div class="alert alert-danger text-center"><?php echo $error; ?></div>
+        <?php endif; ?>
 
-    <form method="POST" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label class="form-label">Organizer Email*</label>
-            <input type="email" name="organizer_email" class="form-control" required>
-        </div>
+        <form method="POST" enctype="multipart/form-data" class="bme-form">
+            <div class="mb-3">
+                <label class="form-label">Organizer Email*</label>
+                <input type="email" name="organizer_email" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Event Title*</label>
-            <input type="text" name="title" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Event Title*</label>
+                <input type="text" name="title" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Event Date*</label>
-            <input type="date" name="date" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Event Date*</label>
+                <input type="date" name="date" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Location*</label>
-            <input type="text" name="location" class="form-control" required>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Location*</label>
+                <input type="text" name="location" class="form-control" required>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Description*</label>
-            <textarea name="description" rows="4" class="form-control" required></textarea>
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Description*</label>
+                <textarea name="description" rows="4" class="form-control" required></textarea>
+            </div>
 
-        <div class="mb-3">
-            <label class="form-label">Event Image (optional)</label>
-            <input type="file" name="image" class="form-control">
-        </div>
+            <div class="mb-3">
+                <label class="form-label">Event Image (optional)</label>
+                <input type="file" name="image" class="form-control">
+            </div>
 
-        <button type="submit" class="btn btn-primary w-100">Submit Event</button>
-    </form>
+            <button type="submit" class="btn w-100">Submit Event</button>
+        </form>
+    </div>
 </div>
 
 <?php include("includes/footer.php"); ?>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

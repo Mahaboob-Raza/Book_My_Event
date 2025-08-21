@@ -89,6 +89,8 @@ if (isset($_GET['action']) && isset($_GET['id'])) {
   <meta charset="UTF-8">
   <title>Admin Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assests/css/style.css">
+  
 </head>
 <body class="bg-light">
 
